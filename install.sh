@@ -21,7 +21,11 @@ else
     yarn -v
 fi
 
-git clone https://github.com/gensyn-ai/rl-swarm
-
+if [ -d "$ROOT/swarm-rl" ]; then
+    echo "rl-swarm is exist"
+else
+    echo "swarm-rl doesn't exist, clonning..."
+    git clone https://github.com/gensyn-ai/rl-swarm
+fi
 
 cd $SCRIPT_DIR
