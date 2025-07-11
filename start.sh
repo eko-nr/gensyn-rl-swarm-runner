@@ -4,4 +4,4 @@ source .venv/bin/activate
 # if not worked, then:
 . .venv/bin/activate
 
-./run_unless_stop.sh
+./scripts/run_unless_stop.sh
