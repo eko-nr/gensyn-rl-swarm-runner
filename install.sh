@@ -1,7 +1,7 @@
 ROOT="$HOME"/app
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-chmod +x ./start.sh ./run_unless_stop.sh
+chmod +x ./start.sh ./run_unless_stop.sh ./start_max_ram_8.5GB.sh
 
 mkdir -p $ROOT && cd $ROOT
 
