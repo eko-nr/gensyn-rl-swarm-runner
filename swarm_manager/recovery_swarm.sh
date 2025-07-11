@@ -23,8 +23,7 @@ if [ -f "$target_path" ]; then
     echo ">> File already exists at destination. It will be overwritten: $target_path"
 fi
 
-# Move with overwrite
-mv -f "$source_file" "$target_path"
+cp -f "$source_file" "$target_path"
 
 if [ $? -eq 0 ]; then
     echo ">> Successfully recovery swarm.pem"
