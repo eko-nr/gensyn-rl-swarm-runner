@@ -171,9 +171,8 @@ if [ "$CONNECT_TO_TESTNET" = true ]; then
 
             echo_green ">> Waiting for modal userData.json to be created..."
 
-            while [ ! -f "temp-data/userData.json" ]; do
+            while [ ! -f "$ROOT/modal-login/temp-data/userData.json" ]; do
                 sleep 5  # Wait for 5 seconds before checking again
-                echo $PWD
             done
             echo "Found userData.json. Proceeding..."
 
