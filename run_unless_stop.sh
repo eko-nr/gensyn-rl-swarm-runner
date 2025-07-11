@@ -65,12 +65,6 @@ cleanup() {
     echo_green ">> Shutting down trainer..."
 
     cd "$SCRIPT_DIR"
-    
-    # Kill all processes belonging to this script's process group
-    # Suppress error messages for processes that don't exist
-    kill -- -$$ 2>/dev/null || true
-
-    exit 0
 }
 
 errnotify() {
