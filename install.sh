@@ -10,7 +10,7 @@ apt install screen curl iptables build-essential git wget lz4 jq make gcc nano a
 apt install python3 python3-pip python3-venv python3-dev -y
 
 # Check if Node.js exists
-if command -v node &> /dev/null; then
+if node --version >/dev/null 2>&1; then
     echo "Node.js is already installed: $(node --version)"
 else
     echo "Node.js not found. Installing..."
