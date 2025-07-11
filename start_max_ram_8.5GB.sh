@@ -20,7 +20,7 @@ enable_cgroup_v2() {
         echo ">> You may need to manually enable it via bootloader (e.g., add: systemd.unified_cgroup_hierarchy=1)."
     fi
 
-    exist 0
+    exit 0
 }
 
 # Main logic
