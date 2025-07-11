@@ -21,10 +21,10 @@ else
     yarn -v
 fi
 
-if [ -d "$ROOT/swarm-rl" ]; then
-    echo "rl-swarm is exist"
+if [ -d "$ROOT/rl-swarm" ]; then
+    echo "Official gensyn rl-swarm is exist"
 else
-    echo "swarm-rl doesn't exist, clonning..."
+    echo "official gensyn rl-swarm doesn't exist, clonning..."
     git clone https://github.com/gensyn-ai/rl-swarm
 fi
 
