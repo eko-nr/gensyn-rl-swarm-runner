@@ -1,5 +1,5 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SWARM_RL_DIR="$SCRIPT_DIR/rl-swarm"
+RL_SWARM="$SCRIPT_DIR/rl-swarm"
 
 sudo chmod +x ./start.sh ./start_max_ram_8GB.sh ./scripts/run_unless_stop.sh
 
@@ -19,7 +19,7 @@ else
     yarn -v
 fi
 
-if [ -d "$SWARM_RL_DIR" ]; then
+if [ -d "$RL_SWARM" ]; then
     echo "Official gensyn rl-swarm is exist"
 else
     echo "official gensyn rl-swarm doesn't exist, clonning..."
