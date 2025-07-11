@@ -67,7 +67,8 @@ cleanup() {
     cd "$SCRIPT_DIR"
     
     # Kill all processes belonging to this script's process group
-    kill -- -$$ || true
+    # Suppress error messages for processes that don't exist
+    kill -- -$$ 2>/dev/null || true
 
     exit 0
 }
