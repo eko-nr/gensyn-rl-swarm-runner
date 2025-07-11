@@ -2,7 +2,7 @@
 
 target_dir="../rl-swarm"
 
-read -p "Enter the path of the file to move: " source_file
+read -p "Enter the path of the swarm.pem to restore: " source_file
 
 # Check if source file exists
 if [ ! -f "$source_file" ]; then
