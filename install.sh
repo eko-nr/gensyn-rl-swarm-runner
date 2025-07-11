@@ -1,7 +1,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SWARM_RL_DIR="$SCRIPT_DIR/rl-swarm"
 
-sudo chmod +x ./start.sh ./scripts/run_unless_stop.sh ./scripts/start_max_ram_8.5GB.sh
+sudo chmod +x ./start.sh ./start_max_ram_8.5GB.sh ./scripts/run_unless_stop.sh
 
 sudo apt update -y
 apt install screen curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf tmux htop nvme-cli libgbm1 pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip libleveldb-dev  -y
