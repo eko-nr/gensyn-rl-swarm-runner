@@ -274,6 +274,7 @@ fi
 echo_green ">> Good luck in the swarm!"
 echo_blue ">> And remember to star the repo on GitHub! --> https://github.com/gensyn-ai/rl-swarm"
 
+stop_loop="false"
 
 # Trap SIGINT (Ctrl+C) and EXIT
 trap 'echo ">> Caught Ctrl+C, exiting..."; stop_loop="true"' SIGINT
