@@ -2,8 +2,10 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # General arguments
-ROOT="$HOME"/app/rl-swarm
+ROOT="$(dirname "$SCRIPT_DIR")/rl-swarm" 
 
 export IDENTITY_PATH
 export GENSYN_RESET_CONFIG
@@ -20,8 +22,6 @@ IDENTITY_PATH=${IDENTITY_PATH:-$DEFAULT_IDENTITY_PATH}
 
 DOCKER=${DOCKER:-""}
 GENSYN_RESET_CONFIG=${GENSYN_RESET_CONFIG:-""}
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Bit of a workaround for the non-root docker container.
 if [ -n "$DOCKER" ]; then
