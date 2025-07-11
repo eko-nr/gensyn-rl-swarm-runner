@@ -60,20 +60,16 @@ echo_red() {
     echo -e "$RED_TEXT$1$RESET_TEXT"
 }
 
-# Function to clean up the server process upon exit
+# Cleanup function (no more 'kill' errors)
 cleanup() {
-    echo_green ">> Shutting down trainer..."
-
+    echo ">> Shutting down trainer..."
     cd "$SCRIPT_DIR"
-    
-    # Kill all processes belonging to this script's process group
-    kill -- -$$ || true
-
+    # Only kill process group if it exists
+    if ps -p $$ > /dev/null; then
+        kill -- -$$ 2>/dev/null || true
+    fi
     exit 0
 }
-
-# Call cleanup on SIGINT (Ctrl+C) and EXIT
-trap cleanup SIGINT EXIT
 
 errnotify() {
     echo_red ">> An error was detected while running rl-swarm. See $ROOT/logs for full logs."
@@ -278,17 +274,26 @@ fi
 echo_green ">> Good luck in the swarm!"
 echo_blue ">> And remember to star the repo on GitHub! --> https://github.com/gensyn-ai/rl-swarm"
 
-stop_loop=false
-trap "echo '>> Caught Ctrl+C, exiting...'; stop_loop=true" SIGINT
 
-while ! $stop_loop; do  # Loop while $stop_loop returns non-zero (false)
+# Trap SIGINT (Ctrl+C) and EXIT
+trap 'echo ">> Caught Ctrl+C, exiting..."; stop_loop="true"' SIGINT
+trap cleanup EXIT
+
+# Main loop (restarts unless stopped)
+while [ "$stop_loop" = "false" ]; do
     echo ">> Starting rgym swarm launcher..."
-    python -m rgym_exp.runner.swarm_launcher \
+    
+    # Run Python and check for failure
+    if ! python -m rgym_exp.runner.swarm_launcher \
         --config-path "$ROOT/rgym_exp/config" \
         --config-name "rg-swarm.yaml"
+    then
+        echo ">> Python process crashed! Exit code: $?"
+    fi
 
-    if ! $stop_loop; then  # If not stopped, sleep
-        echo ">> Process exited. Restarting in 5 seconds..."
+    # Only restart if not stopped
+    if [ "$stop_loop" = "false" ]; then
+        echo ">> Restarting in 5 seconds..."
         sleep 5
     fi
 done
