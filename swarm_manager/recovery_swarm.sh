@@ -2,7 +2,7 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-target_dir="$(dirname "$SCRIPT_DIR")/rl-swarm"
+target_dir="$SCRIPT_DIR/rl-swarm"
 
 read -p "Enter the path of the swarm.pem to restore: " source_file
 

@@ -2,8 +2,8 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-target_dir="$(dirname "$SCRIPT_DIR")/rl-swarm/swarm.pem"
-backup_dir="$(dirname "$SCRIPT_DIR")/backup"
+target_dir="$SCRIPT_DIR/rl-swarm/swarm.pem"
+backup_dir="$SCRIPT_DIR/backup"
 
 # Check if source file exists
 if [ ! -f "$target_dir" ]; then
