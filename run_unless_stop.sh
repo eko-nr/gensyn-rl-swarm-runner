@@ -276,19 +276,47 @@ echo_green ">> Good luck in the swarm!"
 echo_blue ">> And remember to star the repo on GitHub! --> https://github.com/gensyn-ai/rl-swarm"
 
 stop_loop=false
-trap "echo '>> Caught Ctrl+C, exiting...'; stop_loop=true" SIGINT
+child_pid=""
+restart_count=0
+max_restarts=200  # Optional: limit restarts to prevent infinite loops
+restart_delay=5
+
+# Set up signal handlers
+trap cleanup SIGINT SIGTERM
+
+echo ">> [$(date)] Starting auto-restart loop (max restarts: $max_restarts)"
 
 while [ "$stop_loop" = false ]; do
-    echo ">> Starting rgym swarm launcher..."
-
+    echo ">> [$(date)] Starting rgym swarm launcher (attempt $((restart_count + 1)))..."
+    
+    # Start the Python process in background and capture its PID
     python -m rgym_exp.runner.swarm_launcher \
         --config-path "$ROOT/rgym_exp/config" \
-        --config-name "rg-swarm.yaml"
-
+        --config-name "rg-swarm.yaml" &
+    
+    child_pid=$!
+    echo ">> [$(date)] Started process with PID $child_pid"
+    
+    # Wait for the process to complete
+    wait "$child_pid"
+    exit_code=$?
+    
+    # Clear the child_pid since process has ended
+    child_pid=""
+    restart_count=$((restart_count + 1))
+    
+    echo ">> [$(date)] Process exited with code $exit_code"
+    
+    # Check if we should restart
     if [ "$stop_loop" = false ]; then
-        echo ">> Process exited. Restarting in 5 seconds..."
-        sleep 5
+        if [ $restart_count -ge $max_restarts ]; then
+            echo ">> [$(date)] Maximum restart limit ($max_restarts) reached. Exiting."
+            break
+        fi
+        
+        echo ">> [$(date)] Restarting in $restart_delay seconds... (restart #$restart_count)"
+        sleep $restart_delay
     fi
 done
 
-echo ">> Exited."
+echo ">> [$(date)] Exited after $restart_count restarts."
