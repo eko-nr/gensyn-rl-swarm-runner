@@ -65,7 +65,15 @@ cleanup() {
     echo_green ">> Shutting down trainer..."
 
     cd "$SCRIPT_DIR"
+    
+    # Kill all processes belonging to this script's process group
+    kill -- -$$ || true
+
+    exit 0
 }
+
+# Call cleanup on SIGINT (Ctrl+C) and EXIT
+trap cleanup SIGINT EXIT
 
 errnotify() {
     echo_red ">> An error was detected while running rl-swarm. See $ROOT/logs for full logs."
@@ -271,47 +279,18 @@ echo_green ">> Good luck in the swarm!"
 echo_blue ">> And remember to star the repo on GitHub! --> https://github.com/gensyn-ai/rl-swarm"
 
 stop_loop=false
-child_pid=""
-restart_count=0
-max_restarts=200  # Optional: limit restarts to prevent infinite loops
-restart_delay=5
+trap "echo '>> Caught Ctrl+C, exiting...'; stop_loop=true" SIGINT
 
-# Set up signal handlers
-trap cleanup SIGINT SIGTERM
-
-echo ">> [$(date)] Starting auto-restart loop (max restarts: $max_restarts)"
-
-while [ "$stop_loop" = false ]; do
-    echo ">> [$(date)] Starting rgym swarm launcher (attempt $((restart_count + 1)))..."
-    
-    # Start the Python process in background and capture its PID
+while ! $stop_loop; do  # Loop while $stop_loop returns non-zero (false)
+    echo ">> Starting rgym swarm launcher..."
     python -m rgym_exp.runner.swarm_launcher \
         --config-path "$ROOT/rgym_exp/config" \
-        --config-name "rg-swarm.yaml" &
-    
-    child_pid=$!
-    echo ">> [$(date)] Started process with PID $child_pid"
-    
-    # Wait for the process to complete
-    wait "$child_pid"
-    exit_code=$?
-    
-    # Clear the child_pid since process has ended
-    child_pid=""
-    restart_count=$((restart_count + 1))
-    
-    echo ">> [$(date)] Process exited with code $exit_code"
-    
-    # Check if we should restart
-    if [ "$stop_loop" = false ]; then
-        if [ $restart_count -ge $max_restarts ]; then
-            echo ">> [$(date)] Maximum restart limit ($max_restarts) reached. Exiting."
-            break
-        fi
-        
-        echo ">> [$(date)] Restarting in $restart_delay seconds... (restart #$restart_count)"
-        sleep $restart_delay
+        --config-name "rg-swarm.yaml"
+
+    if ! $stop_loop; then  # If not stopped, sleep
+        echo ">> Process exited. Restarting in 5 seconds..."
+        sleep 5
     fi
 done
 
-echo ">> [$(date)] Exited after $restart_count restarts."
+echo ">> Exited."
