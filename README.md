@@ -163,7 +163,7 @@ If you encounter issues:
 - Permission issues: Ensure proper file permissions with `chmod 600 swarm.pem`
 
 **Version Issues:**
-- Outdated rl-swarm version: Use `./version_updater.sh --update`
+- Outdated rl-swarm version: Use `sh ./version_updater/update_latest_version.sh`
 
 ## 📝 Notes
 
