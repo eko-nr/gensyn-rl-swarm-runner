@@ -1,0 +1,1 @@
+sudo find /root -type f -name "swarm.pem"
