@@ -274,6 +274,7 @@ echo_green ">> Good luck in the swarm!"
 echo_blue ">> And remember to star the repo on GitHub! --> https://github.com/gensyn-ai/rl-swarm"
 
 stop_loop="false"
+restart_interval=$((60 * 60))  # 60 minutes in seconds
 
 # Trap SIGINT (Ctrl+C) and EXIT
 trap 'echo ">> Caught Ctrl+C, exiting..."; stop_loop="true"' SIGINT
@@ -283,6 +284,9 @@ trap cleanup EXIT
 while [ "$stop_loop" = "false" ]; do
     echo ">> Starting rgym swarm launcher..."
     
+    # Record start time
+    start_time=$(date +%s)
+    
     # Run Python and check for failure
     if ! python -m rgym_exp.runner.swarm_launcher \
         --config-path "$ROOT/rgym_exp/config" \
@@ -290,11 +294,21 @@ while [ "$stop_loop" = "false" ]; do
     then
         echo ">> Python process crashed! Exit code: $?"
     fi
-
+    
     # Only restart if not stopped
     if [ "$stop_loop" = "false" ]; then
-        echo ">> Restarting in 5 seconds..."
-        sleep 5
+        # Calculate elapsed time
+        current_time=$(date +%s)
+        elapsed_time=$((current_time - start_time))
+        
+        # If process ran for less than 60 minutes, wait for the remainder
+        if [ $elapsed_time -lt $restart_interval ]; then
+            remaining_time=$((restart_interval - elapsed_time))
+            echo ">> Process ran for $elapsed_time seconds. Restarting in $remaining_time seconds (60 min total)..."
+            sleep $remaining_time
+        else
+            echo ">> Process ran for $elapsed_time seconds (≥60 min). Restarting immediately..."
+        fi
     fi
 done
 
