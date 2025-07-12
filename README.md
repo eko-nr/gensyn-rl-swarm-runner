@@ -135,7 +135,7 @@ This command will:
 The version updater automatically updates your rl-swarm to the latest version:
 
 ```bash
-./version_updater.sh [options]
+sh ./version_updater/update_latest_version.sh
 ```
 
 **Update Process:**
