@@ -3,5 +3,4 @@ SWARM_RL_DIR="$(dirname "$SCRIPT_DIR")/rl-swarm"
 
 cd $SWARM_RL_DIR
 
-git reset --hard HEAD
 git pull
