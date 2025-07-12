@@ -70,12 +70,12 @@ cleanup() {
     fi
     exit 0
 }
-trap cleanup EXIT
 
 errnotify() {
     echo_red ">> An error was detected while running rl-swarm. See $ROOT/logs for full logs."
 }
 
+trap cleanup EXIT
 trap errnotify ERR
 
 echo -e "\033[38;5;224m"
@@ -273,140 +273,42 @@ fi
 echo_green ">> Good luck in the swarm!"
 echo_blue ">> And remember to star the repo on GitHub! --> https://github.com/gensyn-ai/rl-swarm"
 
-# Configuration
-API_URL="https://dashboard.gensyn.ai/api/v1/round-stage"
-MAX_ROUND_DIFF=5
-CHECK_INTERVAL=30  # Check every 30 seconds
-RESTART_DELAY=5
-ROOT="${ROOT:-$(pwd)}"  # Use current directory if ROOT not set
-
-# Global variables
 stop_loop="false"
-current_app_round=""
-stuck_count=0
-MAX_STUCK_COUNT=3  # Force restart after 3 consecutive stuck detections
+restart_interval=$((60 * 60))  # 60 minutes in seconds
 
-# Function to get current round from API
-get_api_round() {
-    local round=$(curl -s "$API_URL" | grep -o '"round":[0-9]*' | cut -d':' -f2)
-    echo "$round"
-}
-
-# Function to extract round from app output
-extract_app_round() {
-    local log_line="$1"
-    if [[ "$log_line" =~ "Joining round: "([0-9]+) ]]; then
-        echo "${BASH_REMATCH[1]}"
-    fi
-}
-
-# Function to check if app is stuck
-is_app_stuck() {
-    local api_round="$1"
-    local app_round="$2"
-    
-    if [[ -n "$api_round" && -n "$app_round" ]]; then
-        local diff=$((api_round - app_round))
-        if [[ $diff -gt $MAX_ROUND_DIFF ]]; then
-            echo "true"
-        else
-            echo "false"
-        fi
-    else
-        echo "false"
-    fi
-}
-
-# Function to monitor and restart if stuck
-monitor_and_restart() {
-    local app_pid="$1"
-    
-    while [ "$stop_loop" = "false" ] && kill -0 "$app_pid" 2>/dev/null; do
-        sleep "$CHECK_INTERVAL"
-        
-        local api_round=$(get_api_round)
-        
-        if [[ -n "$api_round" && -n "$current_app_round" ]]; then
-            local is_stuck=$(is_app_stuck "$api_round" "$current_app_round")
-            
-            if [[ "$is_stuck" = "true" ]]; then
-                stuck_count=$((stuck_count + 1))
-                echo ">> ⚠️  App stuck detected! API round: $api_round, App round: $current_app_round (diff: $((api_round - current_app_round)))"
-                echo ">> Stuck count: $stuck_count/$MAX_STUCK_COUNT"
-                
-                if [[ $stuck_count -ge $MAX_STUCK_COUNT ]]; then
-                    echo ">> 🔄 Force restarting app due to being stuck..."
-                    kill -TERM "$app_pid" 2>/dev/null
-                    sleep 2
-                    kill -KILL "$app_pid" 2>/dev/null
-                    return 1  # Signal restart needed
-                fi
-            else
-                stuck_count=0  # Reset stuck counter
-            fi
-        fi
-    done
-    
-    return 0  # No restart needed
-}
-
-# Cleanup function
-cleanup() {
-    echo ">> Cleaning up..."
-    stop_loop="true"
-    # Kill any background processes
-    jobs -p | xargs -r kill 2>/dev/null
-    exit 0
-}
-
-# Trap signals
+# Trap SIGINT (Ctrl+C) and EXIT
 trap 'echo ">> Caught Ctrl+C, exiting..."; stop_loop="true"' SIGINT
+trap cleanup EXIT
 
-echo ">> Starting smart swarm launcher with round monitoring..."
-echo ">> API URL: $API_URL"
-echo ">> Max round difference: $MAX_ROUND_DIFF"
-echo ">> Check interval: ${CHECK_INTERVAL}s"
-
-# Main loop
+# Main loop (restarts unless stopped)
 while [ "$stop_loop" = "false" ]; do
     echo ">> Starting rgym swarm launcher..."
-    stuck_count=0  # Reset stuck counter for new instance
     
-    # Start the Python process in background and capture output
-    python -m rgym_exp.runner.swarm_launcher \
+    # Record start time
+    start_time=$(date +%s)
+    
+    # Run Python and check for failure
+    if ! python -m rgym_exp.runner.swarm_launcher \
         --config-path "$ROOT/rgym_exp/config" \
-        --config-name "rg-swarm.yaml" 2>&1 | while IFS= read -r line; do
-        
-        echo "$line"  # Print the line
-        
-        # Extract round number from output
-        app_round=$(extract_app_round "$line")
-        if [[ -n "$app_round" ]]; then
-            current_app_round="$app_round"
-        fi
-        
-    done &
+        --config-name "rg-swarm.yaml"
+    then
+        echo ">> Python process crashed! Exit code: $?"
+    fi
     
-    local app_pid=$!
-    
-    # Start monitoring in background
-    monitor_and_restart "$app_pid" &
-    local monitor_pid=$!
-    
-    # Wait for the app to finish
-    wait "$app_pid"
-    local exit_code=$?
-    
-    # Stop monitoring
-    kill "$monitor_pid" 2>/dev/null
-    wait "$monitor_pid" 2>/dev/null
-    
+    # Only restart if not stopped
     if [ "$stop_loop" = "false" ]; then
-        if [ $exit_code -ne 0 ]; then
-            echo ">> Python process crashed! Exit code: $exit_code"
+        # Calculate elapsed time
+        current_time=$(date +%s)
+        elapsed_time=$((current_time - start_time))
+        
+        # If process ran for less than 60 minutes, wait for the remainder
+        if [ $elapsed_time -lt $restart_interval ]; then
+            remaining_time=$((restart_interval - elapsed_time))
+            echo ">> Process ran for $elapsed_time seconds. Restarting in $remaining_time seconds (60 min total)..."
+            sleep $remaining_time
+        else
+            echo ">> Process ran for $elapsed_time seconds (≥60 min). Restarting immediately..."
         fi
-        echo ">> Restarting in $RESTART_DELAY seconds..."
-        sleep "$RESTART_DELAY"
     fi
 done
 
