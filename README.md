@@ -150,8 +150,6 @@ If you encounter issues:
 2. Reattach to the session to view logs: `screen -r gensyn`
 3. Ensure all system requirements are met
 4. For low-spec setups (8GB RAM), verify that swap space is properly configured: `free -h`
-5. Use swarm manager to validate your configuration: `./swarm_manager.sh --validate`
-6. Check for updates: `./version_updater.sh`
 
 ### Common Issues
 
@@ -178,7 +176,7 @@ If you encounter issues:
 ## 🔒 Security Recommendations
 
 - Regularly backup your swarm.pem file using `sh ./swarm_manager/backup_swarm.sh`
-- Keep your rl-swarm version updated with `./version_updater.sh --update`
+- Keep your rl-swarm version updated with `sh ./version_updater/update_latest_version.sh`
 - Store backups of swarm.pem in a secure location (backups are saved in backup/ directory)
 - Monitor logs regularly for any suspicious activity
 - Use strong passwords and SSH keys for VPS access
