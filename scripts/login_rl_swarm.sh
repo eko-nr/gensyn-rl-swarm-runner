@@ -167,10 +167,10 @@ if [ "$CONNECT_TO_TESTNET" = true ]; then
 
                     if [ -n "$TUNNEL_URL" ]; then
                         echo_green ">> Tunnel URL: $TUNNEL_URL"
-                        xdg-open "$TUNNEL_URL" 2>/dev/null || open "$TUNNEL_URL" 2>/dev/null
                     else
                         echo_red ">> Failed to get tunnel URL!"
                     fi
+                    
                 fi
             else
                 echo_green ">> Please open http://localhost:3000 in your host browser."
