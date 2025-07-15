@@ -154,6 +154,35 @@ if [ -n "$DOCKER" ]; then
     sudo chmod -R 0777 /home/gensyn/rl_swarm/configs
 fi
 
+APP_NAME="gensyn-rl"
+CHECK_INTERVAL=60           # 60s
+MAX_IDLE_MINUTES=10         # 10m
+
+LOG_FILE="$(pm2 info $APP_NAME | grep 'path' | grep 'out log' | awk '{print $NF}')"
+echo "Monitoring $APP_NAME log at $LOG_FILE"
+
+# === Loop 1: Monitor log ===
+(
+    while true; do
+        sleep $CHECK_INTERVAL
+
+        if [ ! -f "$LOG_FILE" ]; then
+            echo "$(date): Log file not found: $LOG_FILE"
+            continue
+        fi
+
+        last_modified=$(stat -c %Y "$LOG_FILE")
+        now=$(date +%s)
+        diff=$(( (now - last_modified) / 60 ))
+
+        if [ "$diff" -ge "$MAX_IDLE_MINUTES" ]; then
+            echo "$(date): Log hasn't updated in $diff minutes. Reloading $APP_NAME..."
+            pm2 reload "$APP_NAME"
+        else
+            echo "$(date): everything works fine :)"
+        fi
+    done
+) &
 
 while true; do
     echo ">> Starting Python process..."
