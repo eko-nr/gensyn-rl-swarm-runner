@@ -30,21 +30,14 @@ sudo sh ./install.sh
 
 ### Standard Setup (RAM ≥ 20GB)
 
-1. Create a new screen session named `gensyn`:
+1. Login to your account:
    ```bash
-   screen -S gensyn
+   ./login.sh
    ```
 
 2. Start the application:
    ```bash
    ./start.sh
-   ```
-
-3. To detach from the screen session, press `Ctrl+A` then `D`
-
-4. To reattach to the screen session later:
-   ```bash
-   screen -r gensyn
    ```
 
 ### Low Specification Setup (RAM = 8GB)
@@ -67,9 +60,9 @@ If your VPS has lower specifications (RAM = 8GB), you can use the memory-optimiz
    echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
    ```
 
-2. Create a screen session:
+2. Login to your account:
    ```bash
-   screen -S gensyn
+   ./login.sh
    ```
 
 3. Start the application with memory optimization:
@@ -77,12 +70,10 @@ If your VPS has lower specifications (RAM = 8GB), you can use the memory-optimiz
    ./start_min_specs.sh
    ```
 
-### Managing Screen Sessions
+### Managing App
 
-- **List all screen sessions**: `screen -ls`
-- **Detach from current session**: `Ctrl+A` then `D`
-- **Reattach to session**: `screen -r gensyn`
-- **Kill session**: `screen -X -S gensyn quit`
+- **Checking logs**: `pm2 logs`
+- **Kill rl-swarm**: `pm2 kill`
 
 ## 📊 Monitoring
 

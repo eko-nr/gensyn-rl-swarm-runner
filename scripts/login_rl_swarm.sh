@@ -194,8 +194,7 @@ if [ "$CONNECT_TO_TESTNET" = true ]; then
                 kill "$TUNNEL_PID" 2>/dev/null && wait "$TUNNEL_PID"
                 echo_green ">> Tunnel stopped."
             fi
-
-
+            
             ;;
             
         n|N)
