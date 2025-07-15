@@ -12,7 +12,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # General arguments
 ROOT="$(dirname "$SCRIPT_DIR")/rl-swarm" 
-
+export MODEL_NAME="Gensyn/Qwen2.5-0.5B-Instruct"
 export IDENTITY_PATH
 export GENSYN_RESET_CONFIG
 export CONNECT_TO_TESTNET=true
