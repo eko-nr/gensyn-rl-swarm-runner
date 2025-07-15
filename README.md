@@ -28,7 +28,7 @@ sudo sh ./install.sh
 
 ## 🚀 Running the Application
 
-### Standard Setup (RAM ≥ 20GB)
+### Standard Setup (RAM ≥ 20GB, everything works good)
 
 1. Login to your account:
    ```bash
@@ -40,7 +40,37 @@ sudo sh ./install.sh
    ./start.sh
    ```
 
-### Low Specification Setup (RAM = 8GB)
+### Middle Specification Setup (RAM >= 12GB, stable, cheaper, highly recommended)
+
+If your VPS has lower specifications (RAM >= 12GB, e.g. 14GB), you can use the memory-optimized version:
+
+1. **Important**: First, create a swap file of at least 20GB:
+   ```bash
+   # Create 20GB swap file
+   sudo fallocate -l 20G /swapfile
+   sudo chmod 600 /swapfile
+   sudo mkswap /swapfile
+   sudo swapon /swapfile
+   
+   # Set swappiness to 10 for better performance
+   sudo sysctl vm.swappiness=10
+   echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
+   
+   # Make swap permanent
+   echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+   ```
+
+2. Login to your account:
+   ```bash
+   ./login.sh
+   ```
+
+3. Start the application with memory optimization:
+   ```bash
+   ./start_max_ram_12GB.sh
+   ```
+
+### Low Specification Setup (RAM = 8GB, lowest training reward, unstable, only won in participation numbers)
 
 If your VPS has lower specifications (RAM = 8GB), you can use the memory-optimized version:
 
