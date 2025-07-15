@@ -1,4 +1,9 @@
 #!/bin/bash
+python3 -m venv .venv
+
+source .venv/bin/activate
+# if not worked, then:
+. .venv/bin/activate
 
 set -euo pipefail
 
@@ -170,7 +175,7 @@ if [ "$CONNECT_TO_TESTNET" = true ]; then
                     else
                         echo_red ">> Failed to get tunnel URL!"
                     fi
-                    
+
                 fi
             else
                 echo_green ">> Please open http://localhost:3000 in your host browser."
