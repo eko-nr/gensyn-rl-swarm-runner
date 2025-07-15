@@ -1,5 +1,11 @@
 #!/bin/bash
 
+python3 -m venv .venv
+
+source .venv/bin/activate
+# if not worked, then:
+. .venv/bin/activate
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -147,19 +153,16 @@ if [ -n "$DOCKER" ]; then
     sudo chmod -R 0777 /home/gensyn/rl_swarm/configs
 fi
 
-echo_green ">> Done!"
 
-python3 -m venv .venv
-
-source .venv/bin/activate
-# if not worked, then:
-. .venv/bin/activate
-
-# Run Python and check for failure
-if ! python -m rgym_exp.runner.swarm_launcher \
-    --config-path "$ROOT/rgym_exp/config" \
-    --config-name "rg-swarm.yaml"
-then
-    pkill -f "rgym_exp.runner.swarm_launcher" 2>/dev/null || true
-    echo ">> Python process crashed! Exit code: $?"
-fi
+while true; do
+    echo ">> Starting Python process..."
+    if ! python -m rgym_exp.runner.swarm_launcher \
+        --config-path "$ROOT/rgym_exp/config" \
+        --config-name "rg-swarm.yaml";
+    then
+        pkill -f "rgym_exp.runner.swarm_launcher" 2>/dev/null || true
+        echo ">> Python process crashed! Exit code: $?"
+    fi
+    echo ">> Restarting in 3 seconds..."
+    sleep 3
+done
