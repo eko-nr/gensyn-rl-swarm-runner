@@ -47,3 +47,5 @@ sleep 2
 pid=$(pm2 pid gensyn-rl-swarm)
 
 echo "$pid" | sudo tee /sys/fs/cgroup/gensyn/cgroup.procs
+
+pm2 startup && pm2 save

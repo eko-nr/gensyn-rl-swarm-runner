@@ -5,3 +5,4 @@ else
 fi
 
 pm2 start ./start.sh --interpreter bash --name gensyn-rl-swarm
+pm2 startup && pm2 save
