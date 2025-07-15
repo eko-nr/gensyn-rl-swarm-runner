@@ -4,7 +4,7 @@ This repository makes it easy to manage and run a Gensyn node for `rl-swarm`. It
 
 ## 🔧 System Requirements
 
-### Recommended Specifications
+### Good Specifications
 - **RAM**: 24 GB
 - **CPU**: 4 physical cores (e.g., quad-core processor)
 - **Storage**: 60 GB SSD (solid-state drive)
