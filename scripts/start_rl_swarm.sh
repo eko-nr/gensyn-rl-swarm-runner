@@ -104,6 +104,7 @@ if [ "$CONNECT_TO_TESTNET" = true ]; then
     sleep 5
 
     while [ ! -f "$ROOT/modal-login/temp-data/userData.json" ]; do
+        echo "Please login first"
         sleep 5  # Wait for 5 seconds before checking again
     done
 
