@@ -11,7 +11,7 @@ This repository makes it easy to manage and run a Gensyn node for `rl-swarm`. It
 - **Operating System**: Ubuntu 22.04 (recommended) or other Linux distributions with support for Docker and Python 3.8+
 
 ### Low Specification Support
-- **RAM**: 10 GB (requires 20GB swap space)
+- **RAM**: 8 GB (requires 20GB swap space)
 - **CPU**: 4 physical cores (e.g., quad-core processor)
 - **Storage**: 60 GB SSD (solid-state drive)
 - **Operating System**: Ubuntu 22.04 (recommended) or other Linux distributions with support for Docker and Python 3.8+
@@ -47,9 +47,9 @@ sudo sh ./install.sh
    screen -r gensyn
    ```
 
-### Low Specification Setup (RAM = 10GB)
+### Low Specification Setup (RAM = 8GB)
 
-If your VPS has lower specifications (RAM = 10GB), you can use the memory-optimized version:
+If your VPS has lower specifications (RAM = 8GB), you can use the memory-optimized version:
 
 1. **Important**: First, create a swap file of at least 20GB:
    ```bash
@@ -74,7 +74,7 @@ If your VPS has lower specifications (RAM = 10GB), you can use the memory-optimi
 
 3. Start the application with memory optimization:
    ```bash
-   ./start_max_ram_8GB.sh
+   ./start_max_ram_7GB.sh
    ```
 
 ### Managing Screen Sessions
