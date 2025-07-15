@@ -156,7 +156,7 @@ fi
 
 APP_NAME="gensyn-rl-swarm"
 CHECK_INTERVAL=60           # in seconds
-MAX_IDLE_MINUTES=15         # in minutes
+MAX_IDLE_MINUTES=30         # in minutes
 
 # Get stdout and stderr log paths from pm2
 LOG_OUT_FILE="$(pm2 info "$APP_NAME" | grep 'out log path' | awk -F '│' '{print $3}' | xargs)"
