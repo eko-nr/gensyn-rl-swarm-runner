@@ -39,18 +39,11 @@ else
 fi
 
 sudo mkdir -p /sys/fs/cgroup/gensyn
-
-# Set limits
 echo 8589934592 | sudo tee /sys/fs/cgroup/gensyn/memory.max
 echo max | sudo tee /sys/fs/cgroup/gensyn/memory.swap.max
-echo $$ | sudo tee /sys/fs/cgroup/gensyn/cgroup.procs
 
-python3 -m venv .venv
+pm2 start ./scripts/start_rl_swarm.sh --interpreter bash --name gensyn-rl-swarm
+sleep 2
+pid=$(pm2 pid gensyn-rl-swarm)
 
-source .venv/bin/activate
-# if not worked, then:
-. .venv/bin/activate
-
-# Add current process to cgroup
-
-./scripts/run_unless_stop.sh
+echo "$pid" | sudo tee /sys/fs/cgroup/gensyn/cgroup.procs

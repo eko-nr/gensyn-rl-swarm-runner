@@ -1,7 +1,7 @@
-python3 -m venv .venv
+if pm2 --version >/dev/null 2>&1; then
+    echo "pm2 installed"
+else
+    npm i -g pm2
+fi
 
-source .venv/bin/activate
-# if not worked, then:
-. .venv/bin/activate
-
-./scripts/run_unless_stop.sh
+pm2 start ./start.sh --interpreter bash --name gensyn-rl-swarm
