@@ -43,7 +43,7 @@ sudo mkdir -p /sys/fs/cgroup/gensyn
 # Set limits
 echo 7116192768 | sudo tee /sys/fs/cgroup/gensyn/memory.max
 echo max | sudo tee /sys/fs/cgroup/gensyn/memory.swap.max
-echo "332500 100000" | sudo tee /sys/fs/cgroup/gensyn/cpu.max
+echo "322500 100000" | sudo tee /sys/fs/cgroup/gensyn/cpu.max
 
 pm2 start ./scripts/start_rl_swarm.sh --interpreter bash --name gensyn-rl-swarm
 sleep 2
