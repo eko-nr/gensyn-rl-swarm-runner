@@ -146,16 +146,28 @@ if [ "$CONNECT_TO_TESTNET" = true ]; then
             # Remove modal credentials if they exist
             rm -r $ROOT/modal-login/temp-data/*.json 2> /dev/null || true
 
+            
             # Try to open the URL in the default browser
             if [ -z "$DOCKER" ]; then
-                if open http://localhost:3000 2> /dev/null; then
+                if open http://localhost:3000 2> /dev/null || xdg-open http://localhost:3000 2> /dev/null; then
                     echo_green ">> Successfully opened http://localhost:3000 in your default browser."
                 else
-                    echo_green ">> Launching Cloudflare Tunnel..."
-                    TUNNEL_URL=$(cloudflared tunnel --url http://localhost:3000 2>&1 | tee /dev/stderr | grep -oE 'https://[^ ]+\.trycloudflare\.com')
-                    
+                    echo_green ">> Launching Cloudflare Tunnel in background..."
+
+                    # Log file untuk output cloudflared
+                    TUNNEL_LOG=$(mktemp)
+
+                    # Jalankan tunnel di background, simpan PID
+                    cloudflared tunnel --url http://localhost:3000 > "$TUNNEL_LOG" 2>&1 &
+                    TUNNEL_PID=$!
+
+                    sleep 5
+
+                    TUNNEL_URL=$(grep -oE 'https://[^ ]+\.trycloudflare\.com' "$TUNNEL_LOG" | head -n 1)
+
                     if [ -n "$TUNNEL_URL" ]; then
                         echo_green ">> Tunnel URL: $TUNNEL_URL"
+                        xdg-open "$TUNNEL_URL" 2>/dev/null || open "$TUNNEL_URL" 2>/dev/null
                     else
                         echo_red ">> Failed to get tunnel URL!"
                     fi
@@ -167,9 +179,17 @@ if [ "$CONNECT_TO_TESTNET" = true ]; then
             echo_green ">> Waiting for modal userData.json to be created..."
 
             while [ ! -f "$ROOT/modal-login/temp-data/userData.json" ]; do
-                sleep 5  # Wait for 5 seconds before checking again
+                sleep 5
             done
-            echo "Found userData.json. Proceeding..."
+
+            echo_green ">> Found userData.json. Proceeding..."
+
+            if [ -n "$TUNNEL_PID" ]; then
+                echo_green ">> Stopping Cloudflare Tunnel (PID: $TUNNEL_PID)..."
+                kill "$TUNNEL_PID" 2>/dev/null && wait "$TUNNEL_PID"
+                echo_green ">> Tunnel stopped."
+            fi
+
 
             ;;
             
