@@ -155,31 +155,43 @@ if [ -n "$DOCKER" ]; then
 fi
 
 APP_NAME="gensyn-rl-swarm"
-CHECK_INTERVAL=60           # 60s
-MAX_IDLE_MINUTES=10         # 10m
+CHECK_INTERVAL=60           # in seconds
+MAX_IDLE_MINUTES=15         # in minutes
 
-LOG_FILE="$(pm2 info $APP_NAME | grep 'out log path' | awk -F '│' '{print $3}' | xargs)"
-echo "Monitoring $APP_NAME log at $LOG_FILE"
+# Get stdout and stderr log paths from pm2
+LOG_OUT_FILE="$(pm2 info "$APP_NAME" | grep 'out log path' | awk -F '│' '{print $3}' | xargs)"
+LOG_ERR_FILE="$(pm2 info "$APP_NAME" | grep 'error log path' | awk -F '│' '{print $3}' | xargs)"
 
-# === Loop 1: Monitor log ===
+echo "Monitoring $APP_NAME logs:"
+echo "- STDOUT: $LOG_OUT_FILE"
+echo "- STDERR: $LOG_ERR_FILE"
+
+# === Loop: Monitor both logs ===
 (
     while true; do
-        sleep $CHECK_INTERVAL
+        sleep "$CHECK_INTERVAL"
 
-        if [ ! -f "$LOG_FILE" ]; then
-            echo "$(date): Log file not found: $LOG_FILE"
+        # If either log file doesn't exist, warn and skip
+        if [ ! -f "$LOG_OUT_FILE" ] || [ ! -f "$LOG_ERR_FILE" ]; then
+            echo "$(date): One or both log files not found:"
+            [ ! -f "$LOG_OUT_FILE" ] && echo "  - Missing: $LOG_OUT_FILE"
+            [ ! -f "$LOG_ERR_FILE" ] && echo "  - Missing: $LOG_ERR_FILE"
             continue
         fi
 
-        last_modified=$(stat -c %Y "$LOG_FILE")
         now=$(date +%s)
-        diff=$(( (now - last_modified) / 60 ))
+        out_mtime=$(stat -c %Y "$LOG_OUT_FILE")
+        err_mtime=$(stat -c %Y "$LOG_ERR_FILE")
 
-        if [ "$diff" -ge "$MAX_IDLE_MINUTES" ]; then
-            echo "$(date): Log hasn't updated in $diff minutes. Reloading $APP_NAME..."
+        out_idle=$(( (now - out_mtime) / 60 ))
+        err_idle=$(( (now - err_mtime) / 60 ))
+
+        # If BOTH logs have been idle too long
+        if [ "$out_idle" -ge "$MAX_IDLE_MINUTES" ] && [ "$err_idle" -ge "$MAX_IDLE_MINUTES" ]; then
+            echo "$(date): Both logs idle ($out_idle min, $err_idle min). Reloading $APP_NAME..."
             pm2 reload "$APP_NAME"
         fi
-        
+
     done
 ) &
 
