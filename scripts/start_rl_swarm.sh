@@ -178,9 +178,8 @@ echo "Monitoring $APP_NAME log at $LOG_FILE"
         if [ "$diff" -ge "$MAX_IDLE_MINUTES" ]; then
             echo "$(date): Log hasn't updated in $diff minutes. Reloading $APP_NAME..."
             pm2 reload "$APP_NAME"
-        else
-            echo "$(date): everything works fine :)"
         fi
+        
     done
 ) &
 
