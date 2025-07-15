@@ -154,7 +154,7 @@ if [ -n "$DOCKER" ]; then
     sudo chmod -R 0777 /home/gensyn/rl_swarm/configs
 fi
 
-APP_NAME="gensyn-rl"
+APP_NAME="gensyn-rl-swarm"
 CHECK_INTERVAL=60           # 60s
 MAX_IDLE_MINUTES=10         # 10m
 
