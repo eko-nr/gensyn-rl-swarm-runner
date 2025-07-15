@@ -158,7 +158,7 @@ APP_NAME="gensyn-rl-swarm"
 CHECK_INTERVAL=60           # 60s
 MAX_IDLE_MINUTES=10         # 10m
 
-LOG_FILE="$(pm2 info $APP_NAME | grep 'path' | grep 'out log' | awk '{print $NF}')"
+LOG_FILE="$(pm2 info $APP_NAME | grep 'out log path' | awk -F '│' '{print $3}' | xargs)"
 echo "Monitoring $APP_NAME log at $LOG_FILE"
 
 # === Loop 1: Monitor log ===
