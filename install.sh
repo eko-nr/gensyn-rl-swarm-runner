@@ -18,6 +18,8 @@ else
     node -v
     npm install -g yarn
     yarn -v
+    npm instal -g pm2
+    npm instal -g cloudflared
 fi
 
 if [ -d "$RL_SWARM" ]; then

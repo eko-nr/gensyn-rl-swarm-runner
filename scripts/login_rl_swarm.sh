@@ -151,7 +151,14 @@ if [ "$CONNECT_TO_TESTNET" = true ]; then
                 if open http://localhost:3000 2> /dev/null; then
                     echo_green ">> Successfully opened http://localhost:3000 in your default browser."
                 else
-                    echo ">> Failed to open http://localhost:3000. Please open it manually."
+                    echo_green ">> Launching Cloudflare Tunnel..."
+                    TUNNEL_URL=$(cloudflared tunnel --url http://localhost:3000 2>&1 | tee /dev/stderr | grep -oE 'https://[^ ]+\.trycloudflare\.com')
+                    
+                    if [ -n "$TUNNEL_URL" ]; then
+                        echo_green ">> Tunnel URL: $TUNNEL_URL"
+                    else
+                        echo_red ">> Failed to get tunnel URL!"
+                    fi
                 fi
             else
                 echo_green ">> Please open http://localhost:3000 in your host browser."
