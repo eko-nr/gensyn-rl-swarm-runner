@@ -40,7 +40,7 @@ sudo sh ./install.sh
    ./start.sh
    ```
 
-### Middle Specification Setup (RAM >= 12GB, stable, almost get the same training rewards as above, highly recommended)
+### Middle Specification Setup (RAM ≥ 12GB, stable, almost get the same training rewards as above, highly recommended)
 
 If your VPS has lower specifications (RAM >= 12GB, e.g. 14GB), you can use the memory-optimized version:
 
