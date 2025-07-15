@@ -41,9 +41,8 @@ fi
 sudo mkdir -p /sys/fs/cgroup/gensyn
 
 # Set limits
-echo 15032385536 | sudo tee /sys/fs/cgroup/gensyn/memory.max
 echo max | sudo tee /sys/fs/cgroup/gensyn/memory.swap.max
-echo "312500 100000" | sudo tee /sys/fs/cgroup/gensyn/cpu.max
+echo "342500 100000" | sudo tee /sys/fs/cgroup/gensyn/cpu.max
 echo $$ | sudo tee /sys/fs/cgroup/gensyn/cgroup.procs
 
 python3 -m venv .venv

@@ -74,7 +74,7 @@ If your VPS has lower specifications (RAM = 8GB), you can use the memory-optimiz
 
 3. Start the application with memory optimization:
    ```bash
-   ./start_max_ram_7GB.sh
+   ./start_min_specs.sh
    ```
 
 ### Managing Screen Sessions
