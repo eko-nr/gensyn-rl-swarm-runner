@@ -41,7 +41,7 @@ fi
 sudo mkdir -p /sys/fs/cgroup/gensyn
 
 # Set limits
-echo 6916192768 | sudo tee /sys/fs/cgroup/gensyn/memory.max
+echo 7116192768 | sudo tee /sys/fs/cgroup/gensyn/memory.max
 echo max | sudo tee /sys/fs/cgroup/gensyn/memory.swap.max
 echo "332500 100000" | sudo tee /sys/fs/cgroup/gensyn/cpu.max
 
