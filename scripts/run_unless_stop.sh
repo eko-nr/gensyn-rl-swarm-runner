@@ -288,6 +288,7 @@ while [ "$stop_loop" = "false" ]; do
         --config-path "$ROOT/rgym_exp/config" \
         --config-name "rg-swarm.yaml"
     then
+        pkill -f python
         echo ">> Python process crashed! Exit code: $?"
     fi
 
