@@ -1,7 +1,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RL_SWARM="$SCRIPT_DIR/rl-swarm"
 
-sudo chmod +x ./login.sh ./start.sh ./start_min_specs.sh ./start_max_ram_8GB.sh 
+sudo chmod +x ./login.sh ./start.sh ./start_min_specs.sh ./start_max_ram_8GB.sh ./start_max_ram_12GB.sh 
 sudo chmod +x ./scripts/login_rl_swarm.sh ./scripts/start_rl_swarm.sh
 
 sudo apt update -y
