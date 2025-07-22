@@ -1,54 +1,50 @@
 #!/bin/bash
 
-# Check if cgroup v2 is mounted
-is_cgroup_v2() {
-    [ -f /sys/fs/cgroup/cgroup.controllers ]
-}
+set -e
 
-# Try to enable cgroup v2 on supported systems
-enable_cgroup_v2() {
-    echo ">> Trying to enable cgroup v2..."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$SCRIPT_DIR"
+SERVICE_NAME="gensyn-rl-swarm"
+SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
+START_SCRIPT="${PROJECT_DIR}/scripts/start_rl_swarm.sh"
 
-    # Only attempt on GRUB-based distros with systemd
-    if [ -f /etc/default/grub ] && command -v grub-mkconfig > /dev/null; then
-        sudo sed -i 's/^GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=1 /' /etc/default/grub
-        sudo grub-mkconfig -o /boot/grub/grub.cfg
-
-        echo ">> Updated GRUB. Please reboot the system to apply cgroup v2 changes."
-    else
-        echo ">> Your system doesn't support automatic cgroup v2 enabling via GRUB."
-        echo ">> You may need to manually enable it via bootloader (e.g., add: systemd.unified_cgroup_hierarchy=1)."
-    fi
-
-    exit 0
-}
-
-# Main logic
-if is_cgroup_v2; then
-    echo "✅ cgroup v2 is already enabled."
-else
-    echo "⚠️  cgroup v2 is not enabled."
-
-    # Ask user if they want to attempt enabling
-    read -p "Do you want to try enabling it now? [y/N]: " confirm
-    if [[ "$confirm" =~ ^[Yy]$ ]]; then
-        enable_cgroup_v2
-    else
-        echo "❌ Skipping cgroup v2 enabling."
-    fi
+# Check if systemd is available
+if ! pidof systemd > /dev/null; then
+  echo "❌ systemd is not running on this system. Exiting."
+  exit 1
 fi
 
-sudo mkdir -p /sys/fs/cgroup/gensyn
+# Create systemd service
+echo "🔧 Creating systemd service: $SERVICE_NAME"
 
-# Set limits
-echo 7516192768 | sudo tee /sys/fs/cgroup/gensyn/memory.max
-echo max | sudo tee /sys/fs/cgroup/gensyn/memory.swap.max
+sudo tee "$SERVICE_FILE" > /dev/null <<EOF
+[Unit]
+Description=Run Gensyn RL Swarm Script
+After=network.target
 
-pm2 start ./scripts/start_rl_swarm.sh --interpreter bash --name gensyn-rl-swarm
-sleep 2
-pid=$(pm2 pid gensyn-rl-swarm)
+[Service]
+Type=simple
+WorkingDirectory=${PROJECT_DIR}
+ExecStart=/bin/bash ${START_SCRIPT}
+Restart=always
+RestartSec=5
+MemoryMax=7516192768
+MemorySwapMax=infinity
 
-pm2 startup && pm2 save
-sleep 2
+[Install]
+WantedBy=multi-user.target
+EOF
 
-echo "$pid" | sudo tee /sys/fs/cgroup/gensyn/cgroup.procs
+# Reload and start the service
+echo "🔄 Reloading systemd daemon..."
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+
+echo "✅ Enabling and starting ${SERVICE_NAME}..."
+sudo systemctl enable --now "$SERVICE_NAME"
+
+# Final confirmation
+echo "✅ Service '${SERVICE_NAME}' has been created and started successfully!"
+echo "📄 To check logs: journalctl -u ${SERVICE_NAME} -f"
+echo "🚀 Running script manually (optional fallback):"
+bash "$START_SCRIPT"
