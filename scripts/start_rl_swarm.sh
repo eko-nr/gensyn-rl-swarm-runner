@@ -168,6 +168,17 @@ echo "- STDERR: $LOG_ERR_FILE"
 
 # === Loop: Monitor both logs ===
 (
+    # Exit this background loop if log directory doesn't exist
+    OUT_DIR=$(dirname "$LOG_OUT_FILE")
+    ERR_DIR=$(dirname "$LOG_ERR_FILE")
+
+    if [ ! -d "$OUT_DIR" ] || [ ! -d "$ERR_DIR" ]; then
+        echo "Background monitor exiting: Log directory does not exist."
+        [ ! -d "$OUT_DIR" ] && echo "  - Missing: $OUT_DIR"
+        [ ! -d "$ERR_DIR" ] && echo "  - Missing: $ERR_DIR"
+        exit 0
+    fi
+
     while true; do
         sleep "$CHECK_INTERVAL"
 
