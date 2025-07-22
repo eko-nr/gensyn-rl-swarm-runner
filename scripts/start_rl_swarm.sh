@@ -154,58 +154,6 @@ if [ -n "$DOCKER" ]; then
     sudo chmod -R 0777 /home/gensyn/rl_swarm/configs
 fi
 
-APP_NAME="gensyn-rl-swarm"
-CHECK_INTERVAL=60           # in seconds
-MAX_IDLE_MINUTES=20         # in minutes
-
-# Get stdout and stderr log paths from pm2
-LOG_OUT_FILE="$(pm2 info "$APP_NAME" | grep 'out log path' | awk -F '│' '{print $3}' | xargs)"
-LOG_ERR_FILE="$(pm2 info "$APP_NAME" | grep 'error log path' | awk -F '│' '{print $3}' | xargs)"
-
-echo "Monitoring $APP_NAME logs:"
-echo "- STDOUT: $LOG_OUT_FILE"
-echo "- STDERR: $LOG_ERR_FILE"
-
-# === Loop: Monitor both logs ===
-(
-    # Exit this background loop if log directory doesn't exist
-    OUT_DIR=$(dirname "$LOG_OUT_FILE")
-    ERR_DIR=$(dirname "$LOG_ERR_FILE")
-
-    if [ ! -d "$OUT_DIR" ] || [ ! -d "$ERR_DIR" ]; then
-        echo "Background monitor exiting: Log directory does not exist."
-        [ ! -d "$OUT_DIR" ] && echo "  - Missing: $OUT_DIR"
-        [ ! -d "$ERR_DIR" ] && echo "  - Missing: $ERR_DIR"
-        exit 0
-    fi
-
-    while true; do
-        sleep "$CHECK_INTERVAL"
-
-        # If either log file doesn't exist, warn and skip
-        if [ ! -f "$LOG_OUT_FILE" ] || [ ! -f "$LOG_ERR_FILE" ]; then
-            echo "$(date): One or both log files not found:"
-            [ ! -f "$LOG_OUT_FILE" ] && echo "  - Missing: $LOG_OUT_FILE"
-            [ ! -f "$LOG_ERR_FILE" ] && echo "  - Missing: $LOG_ERR_FILE"
-            continue
-        fi
-
-        now=$(date +%s)
-        out_mtime=$(stat -c %Y "$LOG_OUT_FILE")
-        err_mtime=$(stat -c %Y "$LOG_ERR_FILE")
-
-        out_idle=$(( (now - out_mtime) / 60 ))
-        err_idle=$(( (now - err_mtime) / 60 ))
-
-        # If BOTH logs have been idle too long
-        if [ "$out_idle" -ge "$MAX_IDLE_MINUTES" ] && [ "$err_idle" -ge "$MAX_IDLE_MINUTES" ]; then
-            echo "$(date): Both logs idle ($out_idle min, $err_idle min). Reloading $APP_NAME..."
-            pm2 reload "$APP_NAME"
-        fi
-
-    done
-) &
-
 while true; do
     echo ">> Starting Python process..."
     if ! python -m rgym_exp.runner.swarm_launcher \
