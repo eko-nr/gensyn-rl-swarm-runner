@@ -46,5 +46,3 @@ sudo systemctl enable --now "$SERVICE_NAME"
 # Final confirmation
 echo "✅ Service '${SERVICE_NAME}' has been created and started successfully!"
 echo "📄 To check logs: journalctl -u ${SERVICE_NAME} -f"
-echo "🚀 Running script manually (optional fallback):"
-bash "$START_SCRIPT"
