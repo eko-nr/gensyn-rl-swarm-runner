@@ -90,13 +90,7 @@ if [ "$CONNECT_TO_TESTNET" = true ]; then
         # Linux version
         sed -i "3s/.*/SMART_CONTRACT_ADDRESS=$SWARM_CONTRACT/" "$ENV_FILE"
     fi
-
-    # Docker image already builds it, no need to again.
-    if [ -z "$DOCKER" ]; then
-        yarn install --immutable
-        echo "Building server"
-        yarn build > "$ROOT/logs/yarn.log" 2>&1
-    fi
+    
     yarn start >> "$ROOT/logs/yarn.log" 2>&1 & # Run in background and log output
 
     SERVER_PID=$!  # Store the process ID
