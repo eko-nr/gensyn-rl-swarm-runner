@@ -132,15 +132,10 @@ if [ "$CONNECT_TO_TESTNET" = true ]; then
 
     # Docker image already builds it, no need to again.
     if [ -z "$DOCKER" ]; then
-        if [ -d ".next" ]; then
-            echo "Skipping build step: .next directory already exists."
-        else
-            yarn install --immutable
-            echo "Building server"
-            yarn build > "$ROOT/logs/yarn.log" 2>&1
-        fi
+        yarn install --immutable
+        echo "Building server"
+        yarn build > "$ROOT/logs/yarn.log" 2>&1
     fi
-
     yarn start >> "$ROOT/logs/yarn.log" 2>&1 & # Run in background and log output
 
     SERVER_PID=$!  # Store the process ID
