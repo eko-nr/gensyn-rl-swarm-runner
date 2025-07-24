@@ -31,6 +31,7 @@ RestartSec=5
 MemoryMax=7216192768
 MemorySwapMax=infinity
 CPUQuota=352%
+RuntimeMaxSec=14400
 
 [Install]
 WantedBy=multi-user.target
