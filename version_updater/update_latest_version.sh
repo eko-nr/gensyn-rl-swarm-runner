@@ -1,1 +1,1 @@
-cd ./rl-swarm && git pull && cd ..
+cd ./rl-swarm && git reset --hard && git pull && cd ..
