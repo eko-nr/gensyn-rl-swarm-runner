@@ -72,7 +72,7 @@ echo_red() {
 # Function to clean up the server process upon exit
 cleanup() {
     pkill -f cloudflared
-
+    kill -- -$$ || true
     exit 0
 }
 
