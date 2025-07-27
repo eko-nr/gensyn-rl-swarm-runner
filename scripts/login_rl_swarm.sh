@@ -225,12 +225,6 @@ if [ "$CONNECT_TO_TESTNET" = true ]; then
             sleep 5
         fi
     done
-
-    if [ -n "$TUNNEL_PID" ]; then
-        echo_green ">> Stopping Cloudflare Tunnel (PID: $TUNNEL_PID)..."
-        kill "$TUNNEL_PID" 2>/dev/null && wait "$TUNNEL_PID"
-        echo_green ">> Tunnel stopped."
-    fi
 fi
 
 echo_green ">> Getting requirements..."
