@@ -35,10 +35,10 @@ source .venv/bin/activate
 # if not worked, then:
 . .venv/bin/activate
 
-echo_green ">> Getting requirements..."
+echo ">> Getting requirements..."
 pip install --upgrade pip
 
-echo_green ">> Installing GenRL..."
+echo ">> Installing GenRL..."
 pip install gensyn-genrl==0.1.4
 pip install reasoning-gym>=0.1.20 # for reasoning gym env
 pip install trl # for grpo config, will be deprecated soon
