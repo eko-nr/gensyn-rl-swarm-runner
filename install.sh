@@ -29,12 +29,6 @@ else
     git clone https://github.com/gensyn-ai/rl-swarm
 fi
 
-python3 -m venv .venv
-
-source .venv/bin/activate
-# if not worked, then:
-. .venv/bin/activate
-
 echo ">> Getting requirements..."
 pip install --upgrade pip
 
