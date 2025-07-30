@@ -1,4 +1,3 @@
-# Fresh
 #!/bin/bash
 python3 -m venv .venv
 
@@ -227,16 +226,6 @@ if [ "$CONNECT_TO_TESTNET" = true ]; then
     done
 fi
 
-echo_green ">> Getting requirements..."
-pip install --upgrade pip
-
-# echo_green ">> Installing GenRL..."
-pip install gensyn-genrl==0.1.4
-pip install reasoning-gym>=0.1.20 # for reasoning gym env
-pip install trl # for grpo config, will be deprecated soon
-pip install hivemind@git+https://github.com/gensyn-ai/hivemind@639c964a8019de63135a2594663b5bec8e5356dd # We need the latest, 1.1.11 is broken
-
-
 if [ ! -d "$ROOT/configs" ]; then
     mkdir "$ROOT/configs"
 fi  
@@ -276,18 +265,6 @@ else
         [Nn]*) HUGGINGFACE_ACCESS_TOKEN="None" ;;
         *) echo ">>> No answer was given, so NO models will be pushed to Hugging Face Hub" && HUGGINGFACE_ACCESS_TOKEN="None" ;;
     esac
-fi
-
-echo -en $GREEN_TEXT
-read -p ">> Enter the name of the model you want to use in huggingface repo/name format, or press [Enter] to use the default model. " MODEL_NAME
-echo -en $RESET_TEXT
-
-# Only export MODEL_NAME if user provided a non-empty value
-if [ -n "$MODEL_NAME" ]; then
-    export MODEL_NAME
-    echo_green ">> Using model: $MODEL_NAME"
-else
-    echo_green ">> Using default model from config"
 fi
 
 echo_green ">> Good luck in the swarm!"
