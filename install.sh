@@ -29,8 +29,6 @@ else
     git clone https://github.com/gensyn-ai/rl-swarm
 fi
 
-cd $RL_SWARM
-
 python3 -m venv .venv
 
 source .venv/bin/activate
@@ -45,5 +43,3 @@ pip install gensyn-genrl==0.1.4
 pip install reasoning-gym>=0.1.20 # for reasoning gym env
 pip install trl # for grpo config, will be deprecated soon
 pip install hivemind@git+https://github.com/gensyn-ai/hivemind@639c964a8019de63135a2594663b5bec8e5356dd # We need the latest, 1.1.11 is broken
-
-cd $SCRIPT_DIR
