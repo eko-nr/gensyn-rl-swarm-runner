@@ -1,5 +1,4 @@
 #!/bin/bash
-
 python3 -m venv .venv
 
 source .venv/bin/activate
@@ -12,7 +11,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # General arguments
 ROOT="$(dirname "$SCRIPT_DIR")/rl-swarm" 
-export MODEL_NAME="Gensyn/Qwen2.5-0.5B-Instruct"
+
+# GenRL Swarm version to use
+GENRL_TAG="v0.1.1"
+
 export IDENTITY_PATH
 export GENSYN_RESET_CONFIG
 export CONNECT_TO_TESTNET=true
@@ -29,6 +31,8 @@ IDENTITY_PATH=${IDENTITY_PATH:-$DEFAULT_IDENTITY_PATH}
 DOCKER=${DOCKER:-""}
 GENSYN_RESET_CONFIG=${GENSYN_RESET_CONFIG:-""}
 
+MODEL_NAME="Gensyn/Qwen2.5-0.5B-Instruct"
+
 # Bit of a workaround for the non-root docker container.
 if [ -n "$DOCKER" ]; then
     volumes=(
@@ -38,8 +42,8 @@ if [ -n "$DOCKER" ]; then
         /home/gensyn/rl_swarm/logs
     )
 
-    for volume in "${volumes[@]}"; do
-        sudo chown -R 1001:1001 "$volume"
+    for volume in ${volumes[@]}; do
+        sudo chown -R 1001:1001 $volume
     done
 fi
 
@@ -66,11 +70,36 @@ echo_red() {
     echo -e "$RED_TEXT$1$RESET_TEXT"
 }
 
+ROOT_DIR="$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)"
+
+# Function to clean up the server process upon exit
+cleanup() {
+    echo_green ">> Shutting down trainer..."
+
+    # Kill all processes belonging to this script's process group
+    kill -- -$$ || true
+
+    exit 0
+}
+
 errnotify() {
     echo_red ">> An error was detected while running rl-swarm. See $ROOT/logs for full logs."
 }
 
+trap cleanup EXIT
 trap errnotify ERR
+
+echo -e "\033[38;5;224m"
+cat << "EOF"
+    ██████  ██            ███████ ██     ██  █████  ██████  ███    ███
+    ██   ██ ██            ██      ██     ██ ██   ██ ██   ██ ████  ████
+    ██████  ██      █████ ███████ ██  █  ██ ███████ ██████  ██ ████ ██
+    ██   ██ ██                 ██ ██ ███ ██ ██   ██ ██   ██ ██  ██  ██
+    ██   ██ ███████       ███████  ███ ███  ██   ██ ██   ██ ██      ██
+
+    From Gensyn
+
+EOF
 
 # Create logs directory if it doesn't exist
 mkdir -p "$ROOT/logs"
@@ -148,15 +177,11 @@ if [ -n "$DOCKER" ]; then
     sudo chmod -R 0777 /home/gensyn/rl_swarm/configs
 fi
 
-while true; do
-    echo ">> Starting Python process..."
-    if ! python -m rgym_exp.runner.swarm_launcher \
-        --config-path "$ROOT/rgym_exp/config" \
-        --config-name "rg-swarm.yaml";
-    then
-        pkill -f "rgym_exp.runner.swarm_launcher" 2>/dev/null || true
-        echo ">> Python process crashed! Exit code: $?"
-    fi
-    echo ">> Restarting in 3 seconds..."
-    sleep 3
-done
+echo_green ">> Done!"
+
+echo_green ">> Good luck in the swarm!"
+echo_blue ">> And remember to star the repo on GitHub! --> https://github.com/gensyn-ai/rl-swarm"
+
+python -m rgym_exp.runner.swarm_launcher \
+    --config-path "$ROOT/rgym_exp/config" \
+    --config-name "rg-swarm.yaml" 
