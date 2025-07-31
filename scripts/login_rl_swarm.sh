@@ -75,10 +75,6 @@ cleanup() {
     exit 0
 }
 
-errnotify() {
-    echo_red ">> An error was detected while running rl-swarm. See $ROOT/logs for full logs."
-}
-
 trap cleanup EXIT
 trap errnotify ERR
 
@@ -251,6 +247,5 @@ if [ -n "$DOCKER" ]; then
 fi
 
 echo_green ">> Done!"
-
 echo_green ">> Good luck in the swarm!"
 echo_blue ">> And remember to star the repo on GitHub! --> https://github.com/gensyn-ai/rl-swarm"
