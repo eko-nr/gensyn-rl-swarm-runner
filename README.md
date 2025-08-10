@@ -52,9 +52,9 @@ If your VPS has lower specifications (RAM >= 12GB, e.g. 14GB), you can use the m
    sudo mkswap /swapfile
    sudo swapon /swapfile
    
-   # Set swappiness to 10 for better performance
-   sudo sysctl vm.swappiness=10
-   echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
+   # Set swappiness to 20 for better performance
+   sudo sysctl vm.swappiness=20
+   echo 'vm.swappiness=20' | sudo tee -a /etc/sysctl.conf
    
    # Make swap permanent
    echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
@@ -82,9 +82,9 @@ If your VPS has lower specifications (RAM = 8GB), you can use the memory-optimiz
    sudo mkswap /swapfile
    sudo swapon /swapfile
    
-   # Set swappiness to 10 for better performance
-   sudo sysctl vm.swappiness=10
-   echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
+   # Set swappiness to 20 for better performance
+   sudo sysctl vm.swappiness=20
+   echo 'vm.swappiness=20' | sudo tee -a /etc/sysctl.conf
    
    # Make swap permanent
    echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
