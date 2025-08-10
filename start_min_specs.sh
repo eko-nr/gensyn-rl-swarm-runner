@@ -28,9 +28,9 @@ WorkingDirectory=${PROJECT_DIR}
 ExecStart=/bin/bash ${START_SCRIPT}
 Restart=always
 RestartSec=5
-MemoryMax=7016192768
+MemoryMax=6516192768
 MemorySwapMax=infinity
-CPUQuota=352%
+CPUQuota=330%
 
 [Install]
 WantedBy=multi-user.target
