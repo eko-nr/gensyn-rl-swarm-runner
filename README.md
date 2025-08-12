@@ -102,8 +102,13 @@ If your VPS has lower specifications (RAM = 8GB), you can use the memory-optimiz
 
 ### Managing App
 
+1. Middle above specs:
 - **Checking logs**: `pm2 logs gensyn-rl-swarm`
 - **Kill rl-swarm**: `pm2 kill`
+
+2. Low specs:
+- **Checking logs**: `journalctl -u gensyn-rl-swarm -f -n 100`
+- **Stop rl-swarm**: `systemctl stop gensyn-rl-swarm`
 
 ## 📊 Monitoring
 
@@ -163,15 +168,6 @@ sh ./version_updater/update_latest_version.sh
 1. Clone the latest rl-swarm version
 2. Apply updates while preserving your settings
 
-## 🔧 Troubleshooting
-
-If you encounter issues:
-
-1. Check if the screen session is still running: `screen -ls`
-2. Reattach to the session to view logs: `screen -r gensyn`
-3. Ensure all system requirements are met
-4. For low-spec setups (8GB RAM), verify that swap space is properly configured: `free -h`
-
 ### Common Issues
 
 **Swarm.pem Issues:**
@@ -202,11 +198,3 @@ If you encounter issues:
 - Monitor logs regularly for any suspicious activity
 - Use strong passwords and SSH keys for VPS access
 - Use recovery function when needed with `sh ./swarm_manager/recovery_swarm.sh`
-
-## 📞 Support
-
-For additional support or questions:
-- Check the troubleshooting section above
-- Review logs in the screen session
-- Validate your configuration using the swarm manager
-- Ensure you're running the latest version
