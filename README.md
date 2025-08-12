@@ -105,10 +105,12 @@ If your VPS has lower specifications (RAM = 8GB), you can use the memory-optimiz
 1. Middle and above specs:
 - **Checking logs**: `pm2 logs gensyn-rl-swarm`
 - **Kill rl-swarm**: `pm2 kill`
+- **Restart rl-swarm**: `pm2 reload all`
 
 2. Low specs:
 - **Checking logs**: `journalctl -u gensyn-rl-swarm -f -n 100`
 - **Stop rl-swarm**: `systemctl stop gensyn-rl-swarm`
+- **Restart rl-swarm**: `systemctl restart gensyn-rl-swarm`
 
 ## 📊 Monitoring
 
