@@ -102,7 +102,7 @@ If your VPS has lower specifications (RAM = 8GB), you can use the memory-optimiz
 
 ### Managing App
 
-1. Middle to above specs:
+1. Middle and above specs:
 - **Checking logs**: `pm2 logs gensyn-rl-swarm`
 - **Kill rl-swarm**: `pm2 kill`
 
