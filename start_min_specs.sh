@@ -28,7 +28,7 @@ WorkingDirectory=${PROJECT_DIR}
 ExecStart=/bin/bash ${START_SCRIPT}
 Restart=always
 RestartSec=5
-MemoryMax=6816192768
+MemoryMax=6516192768
 MemorySwapMax=infinity
 CPUQuota=340%
 
