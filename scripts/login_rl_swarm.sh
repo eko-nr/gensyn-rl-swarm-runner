@@ -170,7 +170,7 @@ if [ "$CONNECT_TO_TESTNET" = true ]; then
                     cloudflared tunnel --url http://localhost:3000 > "$TUNNEL_LOG" 2>&1 &
                     TUNNEL_PID=$!
 
-                    sleep 10
+                    sleep 20
 
                     TUNNEL_URL=$(grep -oE 'https://[^ ]+\.trycloudflare\.com' "$TUNNEL_LOG" | head -n 1)
 

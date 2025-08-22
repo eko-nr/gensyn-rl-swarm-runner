@@ -16,11 +16,12 @@ else
     curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
     apt install -y nodejs
     node -v
-    npm install -g yarn
-    yarn -v
-    npm instal -g pm2
-    npm instal -g cloudflared
 fi
+
+npm install -g yarn
+yarn -v
+npm instal -g pm2
+npm instal -g cloudflared
 
 if [ -d "$RL_SWARM" ]; then
     echo "Official gensyn rl-swarm is exist"
