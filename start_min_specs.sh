@@ -41,8 +41,12 @@ echo "🔄 Reloading systemd daemon..."
 sudo systemctl daemon-reexec
 sudo systemctl daemon-reload
 
+systemd-analyze verify "$SERVICE_FILE"
+
 echo "✅ Enabling and starting ${SERVICE_NAME}..."
 sudo systemctl enable --now "$SERVICE_NAME"
+
+systemctl list-unit-files | grep "$SERVICE_NAME"
 
 # Final confirmation
 echo "✅ Service '${SERVICE_NAME}' has been created and started successfully!"
