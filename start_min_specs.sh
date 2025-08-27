@@ -15,6 +15,7 @@ if ! pidof systemd > /dev/null; then
 fi
 
 # Create systemd service
+rm -f $SERVICE_NAME
 echo "🔧 Creating systemd service: $SERVICE_NAME"
 
 sudo tee "$SERVICE_FILE" > /dev/null <<EOF
