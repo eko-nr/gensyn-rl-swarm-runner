@@ -34,7 +34,6 @@ if [ -d "$RL_SWARM" ]; then
 else
     echo "official gensyn rl-swarm doesn't exist, clonning..."
     git clone https://github.com/gensyn-ai/rl-swarm
-    sed -i -E 's/(num_train_samples:\s*)2/\1 1/' rl-swarm/rgym_exp/config/rg-swarm.yaml
     cd $RL_SWARM/modal-login
     yarn install --immutable
     echo "Building server"
