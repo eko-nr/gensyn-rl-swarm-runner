@@ -27,8 +27,6 @@ if systemctl is-active --quiet gensyn-rl-swarm; then
   sudo systemctl stop gensyn-rl-swarm
 fi
 
-rm -rf rl-swarm
-
 if [ -d "$RL_SWARM" ]; then
     echo "Official gensyn rl-swarm is exist"
 else
