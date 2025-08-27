@@ -38,7 +38,7 @@ else
     cd $RL_SWARM/modal-login
     yarn install --immutable
     echo "Building server"
-    yarn build > $RL_SWARM/modal-login/logs/yarn.log 2>&1
+    yarn build
 fi
 
 python3 -m venv .venv
