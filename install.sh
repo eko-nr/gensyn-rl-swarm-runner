@@ -23,24 +23,17 @@ yarn -v
 npm instal -g pm2
 npm instal -g cloudflared
 
-if systemctl is-active --quiet gensyn-rl-swarm; then
-  sudo systemctl stop gensyn-rl-swarm
-fi
-
 if [ -d "$RL_SWARM" ]; then
     echo "Official gensyn rl-swarm is exist"
 else
     echo "official gensyn rl-swarm doesn't exist, clonning..."
     git clone https://github.com/gensyn-ai/rl-swarm
-    cd $RL_SWARM/modal-login
-    yarn install --immutable
-    echo "Building server"
-    yarn build 2>/dev/null
 fi
 
 python3 -m venv .venv
 
 source .venv/bin/activate
+# if not worked, then:
 . .venv/bin/activate
 
 echo ">> Getting requirements..."
