@@ -6,13 +6,16 @@ source .venv/bin/activate
 # if not worked, then:
 . .venv/bin/activate
 
+set -a
+. ../.env
+set +a
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # General arguments
 ROOT="$(dirname "$SCRIPT_DIR")/rl-swarm" 
-export MODEL_NAME="Gensyn/Qwen2.5-0.5B-Instruct"
 export IDENTITY_PATH
 export GENSYN_RESET_CONFIG
 export CONNECT_TO_TESTNET=true
