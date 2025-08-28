@@ -53,4 +53,4 @@ if systemctl list-unit-files | grep "$SERVICE_NAME"; then systemctl restart "$SE
 
 # Final confirmation
 echo "✅ Service '${SERVICE_NAME}' has been created and started successfully!"
-echo "📄 To check logs: journalctl -u ${SERVICE_NAME} -f"
+echo "📄 To check logs: journalctl -u ${SERVICE_NAME} -f -o cat"
