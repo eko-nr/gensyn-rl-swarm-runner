@@ -36,7 +36,6 @@ source .venv/bin/activate
 # if not worked, then:
 . .venv/bin/activate
 
-
 # check if gensyn-genrl is already installed
 if ! pip show gensyn-genrl >/dev/null 2>&1; then
     echo ">> Getting requirements..."
