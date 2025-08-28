@@ -17,17 +17,16 @@ export GENSYN_RESET_CONFIG
 export CONNECT_TO_TESTNET=true
 export ORG_ID
 export HF_HUB_DOWNLOAD_TIMEOUT=120  # 2 minutes
-export SWARM_CONTRACT="0xFaD7C5e93f28257429569B854151A1B8DCD404c2"
 export CUDA_VISIBLE_DEVICES=""
 
-ENV_FILE="$SCRIPT_DIR/../.env"
+ENV_CONFIG_FILE="$SCRIPT_DIR/../.env"
 
-if [ -f "$ENV_FILE" ]; then
+if [ -f "$ENV_CONFIG_FILE" ]; then
   set -a
-  . "$ENV_FILE"
+  . "$ENV_CONFIG_FILE"
   set +a
 else
-  echo "❌ .env file not found: $ENV_FILE"
+  echo "❌ .env file not found: $ENV_CONFIG_FILE"
   exit 1
 fi
 
@@ -95,12 +94,15 @@ if [ "$CONNECT_TO_TESTNET" = true ]; then
     ENV_FILE="$ROOT"/modal-login/.env
     if [[ "$OSTYPE" == "darwin"* ]]; then
         # macOS version
-        sed -i '' "3s/.*/SMART_CONTRACT_ADDRESS=$SWARM_CONTRACT/" "$ENV_FILE"
+        sed -i '' "3s/.*/SWARM_CONTRACT_ADDRESS=$SWARM_CONTRACT/" "$ENV_FILE"
+        sed -i '' "4s/.*/PRG_CONTRACT_ADDRESS=$PRG_CONTRACT/" "$ENV_FILE"
+
     else
         # Linux version
-        sed -i "3s/.*/SMART_CONTRACT_ADDRESS=$SWARM_CONTRACT/" "$ENV_FILE"
+        sed -i "3s/.*/SWARM_CONTRACT_ADDRESS=$SWARM_CONTRACT/" "$ENV_FILE"
+        sed -i "4s/.*/PRG_CONTRACT_ADDRESS=$PRG_CONTRACT/" "$ENV_FILE"
     fi
-    
+
     yarn start >> "$ROOT/logs/yarn.log" 2>&1 & # Run in background and log output
 
     SERVER_PID=$!  # Store the process ID
