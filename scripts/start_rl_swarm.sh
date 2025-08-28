@@ -6,10 +6,6 @@ source .venv/bin/activate
 # if not worked, then:
 . .venv/bin/activate
 
-set -a
-. ../.env
-set +a
-
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -22,8 +18,18 @@ export CONNECT_TO_TESTNET=true
 export ORG_ID
 export HF_HUB_DOWNLOAD_TIMEOUT=120  # 2 minutes
 export SWARM_CONTRACT="0xFaD7C5e93f28257429569B854151A1B8DCD404c2"
-export HUGGINGFACE_ACCESS_TOKEN="None"
 export CUDA_VISIBLE_DEVICES=""
+
+ENV_FILE="$SCRIPT_DIR/../.env"
+
+if [ -f "$ENV_FILE" ]; then
+  set -a
+  . "$ENV_FILE"
+  set +a
+else
+  echo "❌ .env file not found: $ENV_FILE"
+  exit 1
+fi
 
 # Path to an RSA private key. If this path does not exist, a new key pair will be created.
 # Remove this file if you want a new PeerID.
