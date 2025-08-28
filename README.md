@@ -26,6 +26,100 @@ cd gensyn-rl-swarm-runner
 sudo sh ./install.sh
 ```
 
+## ⚙️ Configuration
+
+### Environment Configuration (.env)
+
+The application now uses a `.env` file to manage rl-swarm configuration. The default configuration includes:
+
+```env
+MODEL_NAME="Gensyn/Qwen2.5-0.5B-Instruct"
+HUGGINGFACE_ACCESS_TOKEN="None"
+PRG_GAME=true
+```
+
+**Configuration Options:**
+
+- **`MODEL_NAME`**: Specifies the AI model to use for training
+  - Default: `"Gensyn/Qwen2.5-0.5B-Instruct"`
+  - **Available open models that can be used directly:**
+    - `"Gensyn/Qwen2.5-0.5B-Instruct"` (default, recommended for low specs)
+    - `"Qwen/Qwen3-0.6B"` (small, efficient)
+    - `"nvidia/AceInstruct-1.5B"` (good balance of size and performance)
+    - `"dnotitia/Smoothie-Qwen3-1.7B"` (enhanced performance)
+    - `"Gensyn/Qwen2.5-1.5B-Instruct"` (higher performance, requires more RAM)
+
+- **`HUGGINGFACE_ACCESS_TOKEN`**: Your Hugging Face access token for private models
+  - Default: `"None"` (for public models)
+  - Set this if you need to access private models or increase rate limits
+
+- **`PRG_GAME`**: Enables or disables the PRG game mode
+  - Default: `true`
+  - Set to `false` to disable game mode
+
+### Editing Configuration
+
+To modify the configuration:
+
+```bash
+# Edit the .env file
+nano .env
+
+# Or use your preferred text editor
+vim .env
+```
+
+**Example configurations:**
+
+For different open models:
+```env
+# Lightweight model for low specs
+MODEL_NAME="Gensyn/Qwen2.5-0.5B-Instruct"
+HUGGINGFACE_ACCESS_TOKEN="None"
+PRG_GAME=true
+
+# Slightly larger model
+MODEL_NAME="Qwen/Qwen3-0.6B"
+HUGGINGFACE_ACCESS_TOKEN="None"
+PRG_GAME=true
+
+# Balanced performance model
+MODEL_NAME="nvidia/AceInstruct-1.5B"
+HUGGINGFACE_ACCESS_TOKEN="None"
+PRG_GAME=true
+
+# Enhanced performance model
+MODEL_NAME="dnotitia/Smoothie-Qwen3-1.7B"
+HUGGINGFACE_ACCESS_TOKEN="None"
+PRG_GAME=true
+
+# Higher performance model (requires more RAM)
+MODEL_NAME="Gensyn/Qwen2.5-1.5B-Instruct"
+HUGGINGFACE_ACCESS_TOKEN="None"
+PRG_GAME=true
+```
+
+For private model access:
+```env
+MODEL_NAME="your-org/private-model"
+HUGGINGFACE_ACCESS_TOKEN="hf_your_actual_token"
+PRG_GAME=false
+```
+
+### Model Selection Guide
+
+**For Low Specs (8GB RAM):**
+- `"Gensyn/Qwen2.5-0.5B-Instruct"` (recommended)
+- `"Qwen/Qwen3-0.6B"`
+
+**For Middle Specs (12-14GB RAM):**
+- `"nvidia/AceInstruct-1.5B"` (recommended)
+- `"dnotitia/Smoothie-Qwen3-1.7B"`
+
+**For High Specs (20GB+ RAM):**
+- `"Gensyn/Qwen2.5-1.5B-Instruct"` (recommended for best performance)
+- Any of the above models
+
 ## 🚀 Running the Application
 
 ### Standard Setup (RAM ≥ 20GB, everything works good)
@@ -35,7 +129,13 @@ sudo sh ./install.sh
    ./login.sh
    ```
 
-2. Start the application:
+2. (Optional) Configure your environment:
+   ```bash
+   # Edit .env file if you want to change default settings
+   nano .env
+   ```
+
+3. Start the application:
    ```bash
    ./start.sh
    ```
@@ -65,9 +165,15 @@ If your VPS has lower specifications (RAM >= 12GB, e.g. 14GB), you can use the m
    ./login.sh
    ```
 
-3. Start the application with memory optimization:
+3. (Optional) Configure your environment:
    ```bash
-   ./start_max_ram_12GB.sh
+   # Edit .env file if you want to change default settings
+   nano .env
+   ```
+
+4. Start the application with memory optimization:
+   ```bash
+   ./start_max_ram_14GB.sh
    ```
 
 ### Low Specification Setup (RAM = 8GB, cheaper, lowest training reward, unstable, only won in participation numbers)
@@ -95,7 +201,13 @@ If your VPS has lower specifications (RAM = 8GB), you can use the memory-optimiz
    ./login.sh
    ```
 
-3. Start the application with memory optimization:
+3. (Optional) Configure your environment:
+   ```bash
+   # Edit .env file if you want to change default settings
+   nano .env
+   ```
+
+4. Start the application with memory optimization:
    ```bash
    ./start_min_specs.sh
    ```
@@ -117,6 +229,31 @@ If your VPS has lower specifications (RAM = 8GB), you can use the memory-optimiz
 Once running, you can monitor your node's performance and status through the application interface. The screen session will maintain the process running in the background, allowing you to safely disconnect from your VPS while keeping the node operational.
 
 ## 🛠️ Additional Commands
+
+### Configuration Management
+View current configuration:
+```bash
+# Display current .env configuration
+cat .env
+```
+
+Reset to default configuration:
+```bash
+# Backup current config and reset to defaults
+cp .env .env.backup
+echo 'MODEL_NAME="Gensyn/Qwen2.5-0.5B-Instruct"' > .env
+echo 'HUGGINGFACE_ACCESS_TOKEN="None"' >> .env
+echo 'PRG_GAME=true' >> .env
+```
+
+Switch to a different model:
+```bash
+# Example: Switch to nvidia/AceInstruct-1.5B
+cp .env .env.backup
+echo 'MODEL_NAME="nvidia/AceInstruct-1.5B"' > .env
+echo 'HUGGINGFACE_ACCESS_TOKEN="None"' >> .env
+echo 'PRG_GAME=true' >> .env
+```
 
 ### Swarm Manager
 The swarm manager utility helps you manage your swarm.pem file and related configurations:
@@ -168,9 +305,16 @@ sh ./version_updater/update_latest_version.sh
 
 **Update Process:**
 1. Clone the latest rl-swarm version
-2. Apply updates while preserving your settings
+2. Apply updates while preserving your settings and .env configuration
 
 ### Common Issues
+
+**Configuration Issues:**
+- Invalid model name: Use one of the supported open models listed in the configuration section
+- Model too large for your specs: Choose a smaller model based on the model selection guide
+- Authentication errors: Verify your `HUGGINGFACE_ACCESS_TOKEN` in `.env` (use "None" for open models)
+- Permission denied: Ensure `.env` file has proper permissions (`chmod 600 .env`)
+- Out of memory errors: Switch to a smaller model or increase swap space
 
 **Swarm.pem Issues:**
 - Invalid or corrupted swarm.pem file: Use `sh ./swarm_manager/find_swarm.sh` to locate files
@@ -184,6 +328,9 @@ sh ./version_updater/update_latest_version.sh
 
 ## 📝 Notes
 
+- The `.env` file is automatically loaded when starting the application
+- Configuration changes require a restart to take effect
+- Always backup your `.env` file before making major changes
 - Always use screen sessions when running on a VPS to prevent process termination when SSH connection is lost
 - For production deployments, consider using systemd services for automatic startup and management
 - Monitor your system resources regularly to ensure optimal performance
@@ -194,9 +341,12 @@ sh ./version_updater/update_latest_version.sh
 
 ## 🔒 Security Recommendations
 
+- Keep your `.env` file secure and never share your `HUGGINGFACE_ACCESS_TOKEN`
+- Set appropriate file permissions for `.env`: `chmod 600 .env`
 - Regularly backup your swarm.pem file using `sh ./swarm_manager/backup_swarm.sh`
 - Keep your rl-swarm version updated with `sh ./version_updater/update_latest_version.sh`
 - Store backups of swarm.pem in a secure location (backups are saved in backup/ directory)
 - Monitor logs regularly for any suspicious activity
 - Use strong passwords and SSH keys for VPS access
 - Use recovery function when needed with `sh ./swarm_manager/recovery_swarm.sh`
+- Never commit `.env` files to version control if they contain sensitive tokens
