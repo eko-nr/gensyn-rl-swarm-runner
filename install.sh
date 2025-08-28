@@ -1,5 +1,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RL_SWARM="$SCRIPT_DIR/rl-swarm"
+# GenRL Swarm version to use
+GENRL_TAG="0.1.6"
 
 sudo chmod +x ./login.sh ./start.sh ./start_min_specs.sh ./start_max_ram_14GB.sh 
 sudo chmod +x ./scripts/login_rl_swarm.sh ./scripts/start_rl_swarm.sh
@@ -32,26 +34,14 @@ fi
 
 python3 -m venv .venv
 
-source .venv/bin/activate
+source .venv/bin/activate >/dev/null 2>&1
 # if not worked, then:
 . .venv/bin/activate
 
-# check if gensyn-genrl is already installed
-if ! pip show gensyn-genrl >/dev/null 2>&1; then
-    echo ">> Getting requirements..."
-    pip install --upgrade pip
+echo ">> Getting requirements..."
+pip install --upgrade pip
 
-    echo ">> Installing GenRL..."
-    pip install gensyn-genrl==0.1.4
-    pip install "reasoning-gym>=0.1.20"   # for reasoning gym env
-    pip install trl                      # for grpo config, will be deprecated soon
-    pip install git+https://github.com/gensyn-ai/hivemind@639c964a8019de63135a2594663b5bec8e5356dd  # latest fix
-
-    echo ">> Fixing conflicts..."
-    pip install --force-reinstall transformers==4.51.3 trl==0.19.1
-
-    echo ">> Installed packages:"
-    pip freeze
-else
-    echo ">> Requirements already installed, skipping..."
-fi
+echo ">> Installing GenRL..."
+pip install gensyn-genrl==${GENRL_TAG}
+pip install reasoning-gym>=0.1.20 # for reasoning gym env
+pip install hivemind@git+https://github.com/gensyn-ai/hivemind@639c964a8019de63135a2594663b5bec8e5356dd # We need the latest, 1.1.11 is broken
