@@ -4,6 +4,5 @@ else
     npm i -g pm2
 fi
 
-pkill -f 'python|next'
 pm2 start ./scripts/start_rl_swarm.sh --interpreter bash --name gensyn-rl-swarm
 pm2 startup && pm2 save

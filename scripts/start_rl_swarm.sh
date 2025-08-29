@@ -81,6 +81,13 @@ errnotify() {
 
 trap errnotify ERR
 
+cleanup() {
+    kill -- -$$ || true
+    exit 0
+}
+
+trap cleanup EXIT
+
 # Create logs directory if it doesn't exist
 mkdir -p "$ROOT/logs"
 
@@ -166,7 +173,7 @@ while true; do
         --config-path "$ROOT/rgym_exp/config" \
         --config-name "rg-swarm.yaml";
     then
-        pkill -f "rgym_exp.runner.swarm_launcher" 2>/dev/null || true
+        pkill -f "rgym_exp.runner.swarm_launcher" 2>/dev/null
         echo ">> Python process crashed! Exit code: $?"
     fi
     echo ">> Restarting in 3 seconds..."
