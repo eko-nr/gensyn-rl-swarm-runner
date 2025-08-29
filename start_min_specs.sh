@@ -17,6 +17,7 @@ fi
 # Create systemd service
 rm -f $SERVICE_NAME
 sed -i -E 's/(num_train_samples:\s*)2/\1 1/' rl-swarm/rgym_exp/config/rg-swarm.yaml
+pkill -f 'python|next'
 
 echo "🔧 Creating systemd service: $SERVICE_NAME"
 
