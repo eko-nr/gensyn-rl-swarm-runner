@@ -6,6 +6,8 @@ GENRL_TAG="0.1.6"
 sudo chmod +x ./login.sh ./start.sh ./start_min_specs.sh ./start_max_ram_14GB.sh 
 sudo chmod +x ./scripts/login_rl_swarm.sh ./scripts/start_rl_swarm.sh
 
+pkill -f 'python|next'
+
 sudo apt update -y
 apt install screen curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf tmux htop nvme-cli libgbm1 pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip libleveldb-dev  -y
 apt install python3 python3-pip python3-venv python3-dev -y
