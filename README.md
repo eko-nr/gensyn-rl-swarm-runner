@@ -26,100 +26,6 @@ cd gensyn-rl-swarm-runner
 sudo sh ./install.sh
 ```
 
-## ⚙️ Configuration
-
-### Environment Configuration (.env)
-
-The application now uses a `.env` file to manage rl-swarm configuration. The default configuration includes:
-
-```env
-MODEL_NAME="Gensyn/Qwen2.5-0.5B-Instruct"
-HUGGINGFACE_ACCESS_TOKEN="None"
-PRG_GAME=true
-```
-
-**Configuration Options:**
-
-- **`MODEL_NAME`**: Specifies the AI model to use for training
-  - Default: `"Gensyn/Qwen2.5-0.5B-Instruct"`
-  - **Available open models that can be used directly:**
-    - `"Gensyn/Qwen2.5-0.5B-Instruct"` (default, recommended for low specs)
-    - `"Qwen/Qwen3-0.6B"` (small, efficient)
-    - `"nvidia/AceInstruct-1.5B"` (good balance of size and performance)
-    - `"dnotitia/Smoothie-Qwen3-1.7B"` (enhanced performance)
-    - `"Gensyn/Qwen2.5-1.5B-Instruct"` (higher performance, requires more RAM)
-
-- **`HUGGINGFACE_ACCESS_TOKEN`**: Your Hugging Face access token for private models
-  - Default: `"None"` (for public models)
-  - Set this if you need to access private models or increase rate limits
-
-- **`PRG_GAME`**: Enables or disables the PRG game mode
-  - Default: `true`
-  - Set to `false` to disable game mode
-
-### Editing Configuration
-
-To modify the configuration:
-
-```bash
-# Edit the .env file
-nano .env
-
-# Or use your preferred text editor
-vim .env
-```
-
-**Example configurations:**
-
-For different open models:
-```env
-# Lightweight model for low specs
-MODEL_NAME="Gensyn/Qwen2.5-0.5B-Instruct"
-HUGGINGFACE_ACCESS_TOKEN="None"
-PRG_GAME=true
-
-# Slightly larger model
-MODEL_NAME="Qwen/Qwen3-0.6B"
-HUGGINGFACE_ACCESS_TOKEN="None"
-PRG_GAME=true
-
-# Balanced performance model
-MODEL_NAME="nvidia/AceInstruct-1.5B"
-HUGGINGFACE_ACCESS_TOKEN="None"
-PRG_GAME=true
-
-# Enhanced performance model
-MODEL_NAME="dnotitia/Smoothie-Qwen3-1.7B"
-HUGGINGFACE_ACCESS_TOKEN="None"
-PRG_GAME=true
-
-# Higher performance model (requires more RAM)
-MODEL_NAME="Gensyn/Qwen2.5-1.5B-Instruct"
-HUGGINGFACE_ACCESS_TOKEN="None"
-PRG_GAME=true
-```
-
-For private model access:
-```env
-MODEL_NAME="your-org/private-model"
-HUGGINGFACE_ACCESS_TOKEN="hf_your_actual_token"
-PRG_GAME=false
-```
-
-### Model Selection Guide
-
-**For Low Specs (8GB RAM):**
-- `"Gensyn/Qwen2.5-0.5B-Instruct"` (recommended)
-- `"Qwen/Qwen3-0.6B"`
-
-**For Middle Specs (12-14GB RAM):**
-- `"nvidia/AceInstruct-1.5B"` (recommended)
-- `"dnotitia/Smoothie-Qwen3-1.7B"`
-
-**For High Specs (20GB+ RAM):**
-- `"Gensyn/Qwen2.5-1.5B-Instruct"` (recommended for best performance)
-- Any of the above models
-
 ## 🚀 Running the Application
 
 ### Standard Setup (RAM ≥ 20GB, everything works good)
@@ -214,8 +120,8 @@ If your VPS has lower specifications (RAM = 8GB), you can use the memory-optimiz
 
 ### Managing App
 
-1. Middle and above specs:
-- **Checking logs**: `pm2 logs gensyn-rl-swarm`
+1. Mid-to-high specification setup:
+- **Checking logs**: `pm2 logs`
 - **Kill rl-swarm**: `pm2 kill`
 - **Restart rl-swarm**: `pm2 reload all`
 
@@ -223,6 +129,113 @@ If your VPS has lower specifications (RAM = 8GB), you can use the memory-optimiz
 - **Checking logs**: `journalctl -u gensyn-rl-swarm -f -o cat`
 - **Stop rl-swarm**: `systemctl stop gensyn-rl-swarm`
 - **Restart rl-swarm**: `systemctl restart gensyn-rl-swarm`
+
+## 🔄 Version Updater (for the latest rl-swarm version update)
+
+The version updater automatically updates your rl-swarm to the latest version:
+
+```bash
+sh ./version_updater/update_latest_version.sh
+```
+
+**Update Process:**
+1. Clone the latest rl-swarm version
+2. Apply updates while preserving your settings and .env configuration
+3. Restart your rl-swarm
+
+## ⚙️ Configuration
+
+### Environment Configuration (.env)
+
+The application now uses a `.env` file to manage rl-swarm configuration. The default configuration includes:
+
+```env
+MODEL_NAME="Gensyn/Qwen2.5-0.5B-Instruct"
+HUGGINGFACE_ACCESS_TOKEN="None"
+PRG_GAME=true
+```
+
+**Configuration Options:**
+
+- **`MODEL_NAME`**: Specifies the AI model to use for training
+  - Default: `"Gensyn/Qwen2.5-0.5B-Instruct"`
+  - **Available open models that can be used directly:**
+    - `"Gensyn/Qwen2.5-0.5B-Instruct"` (default, recommended for low specs)
+    - `"Qwen/Qwen3-0.6B"` (small, efficient)
+    - `"nvidia/AceInstruct-1.5B"` (good balance of size and performance)
+    - `"dnotitia/Smoothie-Qwen3-1.7B"` (enhanced performance)
+    - `"Gensyn/Qwen2.5-1.5B-Instruct"` (higher performance, requires more RAM)
+
+- **`HUGGINGFACE_ACCESS_TOKEN`**: Your Hugging Face access token for private models
+  - Default: `"None"` (for public models)
+  - Set this if you need to access private models or increase rate limits
+
+- **`PRG_GAME`**: Enables or disables the PRG game mode
+  - Default: `true`
+  - Set to `false` to disable game mode
+
+### Editing Configuration
+
+To modify the configuration:
+
+```bash
+# Edit the .env file
+nano .env
+
+# Or use your preferred text editor
+vim .env
+```
+
+**Example configurations:**
+
+For different open models:
+```env
+# Lightweight model for low specs
+MODEL_NAME="Gensyn/Qwen2.5-0.5B-Instruct"
+HUGGINGFACE_ACCESS_TOKEN="None"
+PRG_GAME=true
+
+# Slightly larger model
+MODEL_NAME="Qwen/Qwen3-0.6B"
+HUGGINGFACE_ACCESS_TOKEN="None"
+PRG_GAME=true
+
+# Balanced performance model
+MODEL_NAME="nvidia/AceInstruct-1.5B"
+HUGGINGFACE_ACCESS_TOKEN="None"
+PRG_GAME=true
+
+# Enhanced performance model
+MODEL_NAME="dnotitia/Smoothie-Qwen3-1.7B"
+HUGGINGFACE_ACCESS_TOKEN="None"
+PRG_GAME=true
+
+# Higher performance model (requires more RAM)
+MODEL_NAME="Gensyn/Qwen2.5-1.5B-Instruct"
+HUGGINGFACE_ACCESS_TOKEN="None"
+PRG_GAME=true
+```
+
+For private model access:
+```env
+MODEL_NAME="your-org/private-model"
+HUGGINGFACE_ACCESS_TOKEN="hf_your_actual_token"
+PRG_GAME=false
+```
+
+### Model Selection Guide
+
+**For Low Specs (8GB RAM):**
+- `"Gensyn/Qwen2.5-0.5B-Instruct"` (recommended)
+- `"Qwen/Qwen3-0.6B"`
+
+**For Middle Specs (12-14GB RAM):**
+- `"nvidia/AceInstruct-1.5B"` (recommended)
+- `"dnotitia/Smoothie-Qwen3-1.7B"`
+
+**For High Specs (20GB+ RAM):**
+- `"Gensyn/Qwen2.5-1.5B-Instruct"` (recommended for best performance)
+- Any of the above models
 
 ## 📊 Monitoring
 
@@ -295,17 +308,6 @@ sh ./swarm_manager/recovery_swarm.sh
 
 This command will:
 - Restore your old swarm.pem
-
-### Version Updater
-The version updater automatically updates your rl-swarm to the latest version:
-
-```bash
-sh ./version_updater/update_latest_version.sh
-```
-
-**Update Process:**
-1. Clone the latest rl-swarm version
-2. Apply updates while preserving your settings and .env configuration
 
 ### Common Issues
 
