@@ -121,7 +121,7 @@ If your VPS has lower specifications (RAM = 8GB), you can use the memory-optimiz
 ### Managing App
 
 1. Mid-to-high specification setup:
-- **Checking logs**: `pm2 logs`
+- **Checking logs**: `pm2 logs --lines 200`
 - **Kill rl-swarm**: `pm2 kill`
 - **Restart rl-swarm**: `pm2 reload all`
 
